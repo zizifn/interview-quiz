@@ -52,6 +52,7 @@
   "tsup": {
     "entry": [
       "src",
+      "!src/public",
       "!src/**/__tests__/**",
       "!src/**/*.test.*"
     ],

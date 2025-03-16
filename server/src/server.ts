@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, { type Express } from "express";
+import path from "path";
 import helmet from "helmet";
 import { pino } from "pino";
 
@@ -10,7 +11,7 @@ import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
-import { graphqlRouter, graphqlUIRouter } from "@/graphql";
+import { graphqlRouter } from "@/graphql";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
@@ -27,6 +28,8 @@ app.use(rateLimiter);
 
 // Request logging
 app.use(requestLogger);
+
+app.use(express.static(path.join(__dirname, "./public")));
 
 // Routes
 app.use("/graphql", graphqlRouter);
