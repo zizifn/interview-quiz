@@ -1,0 +1,1 @@
+ALTER TABLE `users_table` ADD `is_employee` integer DEFAULT false;

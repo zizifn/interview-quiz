@@ -1,18 +1,13 @@
 import { InferSelectModel } from "drizzle-orm";
+import { boolean } from "drizzle-orm/gel-core";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-
-export const usersTable = sqliteTable("users_table", {
-  id: integer().primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
-  age: integer().notNull(),
-  email: text().notNull().unique(),
-});
 
 export const userTable = sqliteTable("user", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text().notNull().unique(),
   username: text().notNull().unique(),
   password_hash: text().notNull(),
+  is_employee: integer({ mode: "boolean" }).default(false),
 });
 
 export const sessionTable = sqliteTable("session", {
