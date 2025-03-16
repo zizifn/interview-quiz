@@ -20,6 +20,7 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",
     "@libsql/client": "^0.14.0",
+    "cookie-parser": "^1.4.7",
     "cors": "2.8.5",
     "dotenv": "16.4.7",
     "drizzle-orm": "^0.40.0",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "2.8.17",
     "@types/express": "5.0.0",
     "@types/supertest": "6.0.2",

@@ -7,6 +7,9 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import { authDB } from "@/db/db";
 import { eq } from "drizzle-orm";
 import { hash, verify } from "@node-rs/argon2";
+import { env } from "@/common/utils/envConfig";
+
+import type { Request, Response, NextFunction } from "express";
 
 export async function hashPassword(password: string): Promise<string> {
   return await hash(password, {
@@ -15,6 +18,18 @@ export async function hashPassword(password: string): Promise<string> {
     outputLen: 32,
     parallelism: 1,
   });
+}
+
+export async function getUser(username: string): Promise<User> {
+  const users = await authDB
+    .select()
+    .from(userTable)
+    .where(eq(userTable.username, username));
+
+  if (users.length !== 1) {
+    throw new Error("Invalid user ID");
+  }
+  return users[0];
 }
 
 export async function verifyPasswordHash(
@@ -80,6 +95,42 @@ export async function invalidateSession(sessionId: string): Promise<void> {
 
 export async function invalidateAllSessions(userId: number): Promise<void> {
   await authDB.delete(sessionTable).where(eq(sessionTable.userId, userId));
+}
+
+export function setSessionTokenCookie(
+  response: Response,
+  token: string,
+  expiresAt: Date
+): void {
+  if (env.isProduction) {
+    // When deployed over HTTPS
+    response.setHeader(
+      "Set-Cookie",
+      `session=${token}; HttpOnly; SameSite=Lax; Expires=${expiresAt.toUTCString()}; Path=/; Secure;`
+    );
+  } else {
+    // When deployed over HTTP (localhost)
+    response.setHeader(
+      "Set-Cookie",
+      `session=${token}; HttpOnly; SameSite=Lax; Expires=${expiresAt.toUTCString()}; Path=/`
+    );
+  }
+}
+
+export function deleteSessionTokenCookie(response: Response): void {
+  if (env.isProduction) {
+    // When deployed over HTTPS
+    response.setHeader(
+      "Set-Cookie",
+      "session=; HttpOnly; SameSite=Lax; Max-Age=0; Path=/; Secure;"
+    );
+  } else {
+    // When deployed over HTTP (localhost)
+    response.setHeader(
+      "Set-Cookie",
+      "session=; HttpOnly; SameSite=Lax; Max-Age=0; Path=/"
+    );
+  }
 }
 
 export type SessionValidationResult =
