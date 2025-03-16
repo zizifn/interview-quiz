@@ -29,7 +29,7 @@ COPY client ./
 RUN npm run build
 
 # Final stage - combine production dependencies and build output
-FROM node:23.9.0-alpine AS runner
+FROM node:23.9.0-slim AS runner
 WORKDIR /app
 # Copy server production dependencies
 COPY --from=server-prod-deps --chown=node:node /app/server/node_modules ./dist/node_modules
@@ -37,7 +37,7 @@ COPY --from=server-prod-deps --chown=node:node /app/server/node_modules ./dist/n
 COPY --from=server-build --chown=node:node /app/server/dist ./dist
 # Create public directory and copy client build files
 RUN mkdir -p ./dist/public
-COPY --from=client-build --chown=node:node /app/client/dist/* ./dist/public/
+COPY --from=client-build --chown=node:node /app/client/dist ./dist/public/
 
 # Use the node user from the image
 USER node

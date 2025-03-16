@@ -23,7 +23,7 @@ npm run start:dev
 ### Docker Setup
 
 ```bash
- docker run --env-file .env -p 8080:8080 interview-quiz
+ docker run --rm --env-file .env -p 8080:8080 interview-quiz
 ```
 
 ### Online version

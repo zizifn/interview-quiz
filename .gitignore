@@ -136,3 +136,4 @@ dist
 .pnp.*
 .vercel
 **/.npmrc
+run.sh
