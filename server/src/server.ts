@@ -3,15 +3,16 @@ import express, { type Express } from "express";
 import path from "path";
 import helmet from "helmet";
 import { pino } from "pino";
+import pinologger from "pino-http";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
-import { userRouter } from "@/api/user/userRouter";
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 import { graphqlRouter } from "@/graphql";
+import { authRouter } from "./api/auth/authRouter";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
@@ -28,6 +29,7 @@ app.use(rateLimiter);
 
 // Request logging
 app.use(requestLogger);
+// app.use(pinologger());
 
 app.use(express.static(path.join(__dirname, "./public")));
 
@@ -36,7 +38,8 @@ app.use("/graphql", graphqlRouter);
 // app.all("/graphql/ui", graphqlUIRouter);
 
 app.use("/health-check", healthCheckRouter);
-app.use("/users", userRouter);
+app.use("/auth", authRouter);
+// app.use("/users", userRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
