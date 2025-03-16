@@ -1,9 +1,9 @@
 {
-  "name": "express-typescript-boilerplate",
+  "name": "interview-quiz-node",
   "version": "1.0.14",
-  "description": "An Express boilerplate backend",
-  "author": "Edwin Hernandez",
-  "repository": "edwinhern/express-typescript-2024",
+  "description": "interview-quiz-node",
+  "author": "",
+  "repository": "",
   "license": "MIT",
   "main": "index.ts",
   "private": true,
@@ -53,6 +53,7 @@
     "entry": [
       "src",
       "!src/public",
+      "!src/db/db_test.ts",
       "!src/**/__tests__/**",
       "!src/**/*.test.*"
     ],
