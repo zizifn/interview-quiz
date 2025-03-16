@@ -22,5 +22,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: zizifn/interview-quiz:latest
+          tags: zizifn/interview-quiz:1.0.${{ github.run_number }},zizifn/interview-quiz:latest
