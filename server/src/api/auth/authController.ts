@@ -62,3 +62,20 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+
+export async function getUserInfo(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const user = req.locals?.user;
+  if (!user) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  res.status(200).json({
+    ...user,
+    password: undefined,
+    password_hash: undefined,
+  });
+}

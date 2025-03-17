@@ -41,6 +41,7 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     next();
     return;
   } catch (error) {
+    console.log(error);
     req.log.error("Error validating session token:", error);
     next();
     return;
