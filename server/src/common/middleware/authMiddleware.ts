@@ -42,7 +42,6 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     return;
   } catch (error) {
     req.log.error("Error validating session token:", error);
-    deleteSessionTokenCookie(res);
     next();
     return;
   }

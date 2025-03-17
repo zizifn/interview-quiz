@@ -14,7 +14,6 @@ const restaurant = {
   guestName: "John Doe",
   guestEmail: "john.doe@example.com",
   reservationDateTime: 1742189385775,
-  partySize: 4,
   tableInfo: {
     id: "77820980-3f8f-4fe8-a75c-cc9be3817126",
     size: 4,

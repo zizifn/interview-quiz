@@ -3,7 +3,7 @@ import { env } from "@/common/utils/envConfig";
 
 const restaurant = {
   type: "restaurant",
-  id: "3a6772a5-a818-44cc-9f31-aba97c7f1b90",
+  id: "f225cf45-0c44-40ea-8d29-0be756626dcf",
   name: "Hilton Shanghai Hongqiao International Airport",
   address:
     "No. 1 Kong Gang 8th Road, Changning District, Shanghai, 200335, China",

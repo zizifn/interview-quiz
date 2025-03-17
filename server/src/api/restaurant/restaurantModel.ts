@@ -5,7 +5,7 @@ import { commonValidations } from "@/common/utils/commonValidation";
 
 extendZodWithOpenApi(z);
 
-export type Restaurants = z.infer<typeof RestaurantSchema>;
+export type Restaurant = z.infer<typeof RestaurantSchema>;
 export const RestaurantSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
