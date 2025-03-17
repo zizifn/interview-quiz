@@ -13,7 +13,6 @@ import type {
 } from "express";
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  console.log(req.cookies);
   const sessionToken = req.cookies.session;
   if (!sessionToken) {
     next();
@@ -28,7 +27,7 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     };
   }
   const { session, user } = await validateSessionToken(sessionToken);
-  console.log("user session", session);
+  req.log.info("authMiddleware-> session-->user", session, user);
   if (session !== null) {
     setSessionTokenCookie(res, sessionToken, session.expiresAt);
   } else {
