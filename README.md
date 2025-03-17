@@ -6,6 +6,8 @@
 
 #### server
 
+Please make sure you have `.env` file in the `server` folder.
+
 ```bash
 cd server
 npm install
@@ -13,6 +15,8 @@ npm run start:dev
 ```
 
 #### client
+
+Please make sure you have `vite.config.ts` proxy settings to point to your lcoal server.
 
 ```bash
 cd client
