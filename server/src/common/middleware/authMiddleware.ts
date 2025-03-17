@@ -14,6 +14,7 @@ import type {
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const sessionToken = req.cookies.session;
+  console.log("authMiddleware called", sessionToken);
   if (!sessionToken) {
     next();
     return;
@@ -26,17 +27,25 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
       user: null,
     };
   }
-  const { session, user } = await validateSessionToken(sessionToken);
-  req.log.info("authMiddleware-> session-->user", session, user);
-  if (session !== null) {
-    setSessionTokenCookie(res, sessionToken, session.expiresAt);
-  } else {
+  try {
+    const { session, user } = await validateSessionToken(sessionToken);
+
+    req.log.info("authMiddleware-> session-->user", session, user);
+    if (session !== null) {
+      setSessionTokenCookie(res, sessionToken, session.expiresAt);
+    } else {
+      deleteSessionTokenCookie(res);
+    }
+    req.locals.session = session;
+    req.locals.user = user;
+    next();
+    return;
+  } catch (error) {
+    req.log.error("Error validating session token:", error);
     deleteSessionTokenCookie(res);
+    next();
+    return;
   }
-  req.locals.session = session;
-  req.locals.user = user;
-  next();
-  return;
 }
 
 export { authMiddleware };

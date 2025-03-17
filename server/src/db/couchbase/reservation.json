@@ -1,0 +1,20 @@
+{
+  "type": "reservation",
+  "id": "954a6da0-3d71-45d2-b131-f8130b6476ca",
+  "guestId": "01",
+  "restaurantInfo": {
+    "id": "3a6772a5-a818-44cc-9f31-aba97c7f1b90",
+    "name": "Hilton Shanghai Hongqiao International Airport",
+    "address": "No. 1 Kong Gang 8th Road, Changning District, Shanghai, 200335, China"
+  },
+  "guestName": "John Doe",
+  "guestEmail": "john.doe@example.com",
+  "reservationDateTime": 1742189385775,
+  "partySize": 4,
+  "tableInfo": {
+    "id": "77820980-3f8f-4fe8-a75c-cc9be3817126",
+    "size": 4
+  },
+  "status": "confirmed", // confirmed, seated, completed, canceled, no-show
+  "specialRequests": "Window seat preferred"
+}

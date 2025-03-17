@@ -1,8 +1,6 @@
 import { connect } from "couchbase";
 import { env } from "@/common/utils/envConfig";
 
-console.log(connect);
-
 const restaurant = {
   type: "restaurant",
   id: "3a6772a5-a818-44cc-9f31-aba97c7f1b90",
@@ -26,40 +24,43 @@ async function main() {
   const bucketName = "interview-quiz";
   console.log(clusterConnStr, username, password);
 
-  const cluster = await connect(clusterConnStr, {
-    username: username,
-    password: password,
-    // Sets a pre-configured profile called "wanDevelopment" to help avoid latency issues
-    // when accessing Capella from a different Wide Area Network
-    // or Availability Zone (e.g. your laptop).
-    configProfile: "wanDevelopment",
-  });
+  try {
+    const cluster = await connect(clusterConnStr, {
+      username: username,
+      password: password,
+      // Sets a pre-configured profile called "wanDevelopment" to help avoid latency issues
+      // when accessing Capella from a different Wide Area Network
+      // or Availability Zone (e.g. your laptop).
+      configProfile: "wanDevelopment",
+    });
+    const bucket = cluster.bucket(bucketName);
+    const collection = bucket.scope("quiz").collection("restaurant");
+    // create a document
+    const json = {
+      cuisine: ["Italian", "Pizza"],
+      location: {
+        lat: 40.7128,
+        lng: -74.006,
+      },
+    };
 
-  const bucket = cluster.bucket(bucketName);
-  const collection = bucket.scope("quiz").collection("restaurant");
+    //   const result = await collection.upsert(docId, json);
+    //   console.log(result);
 
-  // create a document
-  const json = {
-    cuisine: ["Italian", "Pizza"],
-    location: {
-      lat: 40.7128,
-      lng: -74.006,
-    },
-  };
-  const docId = crypto.randomUUID();
-  console.log(docId);
+    let result = await collection.replace(
+      "f225cf45-0c44-40ea-8d29-0be756626dcf",
+      restaurant
+    );
+    console.log(result);
 
-  //   const result = await collection.upsert(docId, json);
-  //   console.log(result);
-
-  const result = await collection.replace(
-    "f225cf45-0c44-40ea-8d29-0be756626dcf",
-    restaurant,
-    {
-      cas: "update",
-    }
-  );
-  console.log(result);
+    let result2 = await bucket
+      .scope("quiz")
+      .query(`SELECT r.* FROM restaurant r`);
+    console.log(result2);
+  } catch (error) {
+    console.error("Error connecting to Couchbase:", error);
+    return;
+  }
 }
 
 main();

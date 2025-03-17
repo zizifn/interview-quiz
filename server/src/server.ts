@@ -13,6 +13,7 @@ import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 import { graphqlRouter } from "@/graphql";
 import { authRouter } from "./api/auth/authRouter";
+import { restaurantRouter } from "./api/restaurant/restaurantRouter";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
@@ -30,6 +31,9 @@ app.use(helmet());
 
 // Request logging
 app.use(requestLogger);
+// Swagger UI no need auth
+app.use(openAPIRouter);
+
 app.use(authMiddleware);
 
 // Routes
@@ -38,10 +42,7 @@ app.use("/api/graphql", graphqlRouter);
 
 app.use("/health-check", healthCheckRouter);
 app.use("/api/auth", authRouter);
-// app.use("/users", userRouter);
-
-// Swagger UI
-app.use(openAPIRouter);
+app.use("/api/restaurants", restaurantRouter);
 
 // Error handlers
 app.use(errorHandler());
