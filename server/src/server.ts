@@ -11,7 +11,7 @@ import errorHandler from "@/common/middleware/errorHandler";
 import { authMiddleware } from "@/common/middleware/authMiddleware";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
-import { graphqlRouter } from "@/graphql";
+import { graphqlRouter, graphqlUIRouter } from "@/api/graphql";
 import { authRouter } from "./api/auth/authRouter";
 import { restaurantRouter } from "./api/restaurant/restaurantRouter";
 import { reservationRouter } from "./api/reservation/reservationsRouter";
@@ -41,12 +41,12 @@ app.use(requestLogger);
 // Swagger UI no need auth
 app.use(openAPIRouter);
 app.use("/health-check", healthCheckRouter);
+app.use("/graphql", graphqlUIRouter);
 
 app.use(authMiddleware);
 
 // Routes
 app.use("/api/graphql", graphqlRouter);
-// app.all("/graphql/ui", graphqlUIRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/restaurants", restaurantRouter);
 app.use("/api/reservation", reservationRouter);
