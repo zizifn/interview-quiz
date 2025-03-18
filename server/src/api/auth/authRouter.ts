@@ -18,6 +18,8 @@ export const authRouter: Router = express.Router();
 
 authRegistry.register("User", UserSchema);
 authRegistry.register("LoginForm", LoginFormSchema);
+authRegistry.register("LoginResponse", LoginResponseSchema);
+authRegistry.register("Signout", SignoutSchema);
 
 authRegistry.registerPath({
   method: "post",
@@ -48,6 +50,33 @@ authRegistry.registerPath({
     },
   },
   responses: createApiResponse(LoginResponseSchema, "success", 200),
+});
+
+authRegistry.registerPath({
+  method: "get",
+  path: "/auth/user",
+  tags: ["auth"],
+  responses: createApiResponse(UserSchema, "Success", 200),
+});
+
+authRegistry.registerPath({
+  method: "post",
+  path: "/auth/signout",
+  tags: ["auth"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: SignoutSchema,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(
+    z.object({ message: z.string() }),
+    "Success",
+    200
+  ),
 });
 
 authRouter.post("/signup", validateRequest(UserSchema), createUser);

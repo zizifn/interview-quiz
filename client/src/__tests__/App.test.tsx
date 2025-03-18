@@ -49,11 +49,11 @@ describe("App Component", () => {
   test("renders guest view for non-employee users", () => {
 
     vi.spyOn(hooks, "useUser").mockReturnValue({
-      data: { username: "testuser", is_employee: false },
+      data: { username: "testuser", is_employee: false } ,
       isPending: false,
       isError: false,
       error: null,
-    });
+    } as any);
 
     render(<App />, { wrapper: createWrapper() });
 
