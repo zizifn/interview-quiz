@@ -5,14 +5,11 @@ import { SkeletonCard } from "./components/LoadingSkeleton";
 import NavBar from "./components/NavBar";
 import AuthForm from "./components/AuthForm";
 import { GuestView } from "./components/GuestView";
-import { useRestaurants, useTest, useUser } from "./lib/hooks";
-import { useState } from "react";
+import { useRestaurants, useUser } from "./lib/hooks";
 import { EmployeeView } from "./components/EmployeeView";
 
 function App() {
-  console.log("App");
-  const { data, isPending, error, isSuccess } = useUser();
-  const {data:restaurants} = useRestaurants(data?.username || '');
+  const { data, isPending } = useUser();
 
   return (
     <main className="bg-gray-100 h-full">

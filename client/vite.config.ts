@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
@@ -6,6 +6,10 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  test: {
+    globals: true,
+    environment: "jsdom",
+  } ,
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -20,4 +24,4 @@ export default defineConfig({
       },
     },
   },
-});
+} as UserConfig);
