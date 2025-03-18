@@ -23,12 +23,18 @@ export const ReservationSchema = z.object({
   specialRequests: z.string().optional(),
 });
 
-export const NewReservationSchema = ReservationSchema.omit({
-  id: true,
-  guestId: true,
-  guestName: true,
-  status: true,
-});
+export const NewReservationSchema = z
+  .object({
+    restaurantInfo: z.object({
+      id: z.string().uuid().min(1, "Restaurant ID cannot be empty"),
+    }),
+    reservationDateTime: z.number().int().positive(),
+    tableInfo: z.object({
+      id: z.string().uuid().min(1, "Table ID cannot be empty"),
+    }),
+    specialRequests: z.string().optional(),
+  })
+  .strict();
 
 export type NewReservation = z.infer<typeof NewReservationSchema>;
 

@@ -8,7 +8,12 @@ export async function getRestaurant(
   res: Response,
   next: NextFunction
 ) {
-  console.log("getRestaurant called");
+  const user = req.locals?.user;
+  if (!user) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
   const { quizScope } = await getCouchbaseConnection();
   if (!quizScope) {
     res.status(500).json({ error: "Service is unavailable." });

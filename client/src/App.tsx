@@ -1,26 +1,26 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "./lib/http";
-import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonCard } from "./components/LoadingSkeleton";
 import NavBar from "./components/NavBar";
-import LogIn from "./components/Login";
+import AuthForm from "./components/AuthForm";
+import { GuestView } from "./components/GuestView";
+import { useRestaurants, useTest, useUser } from "./lib/hooks";
+import { useState } from "react";
+import { EmployeeView } from "./components/EmployeeView";
 
 function App() {
-  const { data, isPending, error, isSuccess } = useQuery({
-    queryKey: ["auth", "user"],
-    queryFn: getUser,
-  });
+  console.log("App");
+  const { data, isPending, error, isSuccess } = useUser();
+  const {data:restaurants} = useRestaurants(data?.username || '');
 
   return (
     <main className="bg-gray-100 h-full">
-      <NavBar username="james"></NavBar>
+      {data?.username &&  <NavBar username={data.username} isEmployee = {data.is_employee}></NavBar>}
       {isPending && <SkeletonCard></SkeletonCard>}
-      {!data?.username && <LogIn></LogIn>}
-      {data?.username && <p>login success!</p>}
+      {!data?.username && <AuthForm></AuthForm>}
+      {data?.username && !data?.is_employee && <GuestView></GuestView>}
+      {data?.username && data?.is_employee && <EmployeeView></EmployeeView>}
     </main>
   );
 }

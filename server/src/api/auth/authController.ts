@@ -8,6 +8,8 @@ import {
   createSession,
   verifyPasswordHash,
   setSessionTokenCookie,
+  deleteSessionTokenCookie,
+  invalidateSession,
 } from "./auth";
 import { LoginForm } from "./authModel";
 export async function createUser(
@@ -29,8 +31,18 @@ export async function createUser(
       password: undefined,
     });
     return;
-  } catch (error) {
-    next(error);
+  } catch (error: any) {
+    req.log.error("Error creating user:", error);
+    if (error?.code?.includes("SQLITE_CONSTRAINT")) {
+      res.status(409).json({
+        error: "UserName or Email already in use",
+      });
+      return;
+    }
+    res.status(500).json({
+      error: "signup failed",
+    });
+    return;
   }
 }
 
@@ -57,6 +69,8 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     setSessionTokenCookie(res, token, session.expiresAt);
     res.status(200).json({
       message: "Login successful",
+      name: user.username,
+      isEmployee: user.is_employee,
     });
   } catch (error) {
     next(error);
@@ -69,6 +83,8 @@ export async function getUserInfo(
   next: NextFunction
 ) {
   const user = req.locals?.user;
+  console.log("getUserInfo called", user);
+
   if (!user) {
     res.status(401).json({ error: "Unauthorized" });
     return;
@@ -77,5 +93,17 @@ export async function getUserInfo(
     ...user,
     password: undefined,
     password_hash: undefined,
+  });
+}
+
+export async function signout(req: Request, res: Response, next: NextFunction) {
+  const session = req.locals?.session;
+  // clear cookies
+  deleteSessionTokenCookie(res);
+  if (session?.id) {
+    invalidateSession(session.id);
+  }
+  res.status(200).json({
+    message: "Logout successful",
   });
 }

@@ -15,17 +15,23 @@ import { graphqlRouter } from "@/graphql";
 import { authRouter } from "./api/auth/authRouter";
 import { restaurantRouter } from "./api/restaurant/restaurantRouter";
 import { reservationRouter } from "./api/reservation/reservationsRouter";
+import { staticMiddleware } from "./common/middleware/staticMiddleware";
+import { type } from "os";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
 
 // Set the application to trust the reverse proxy
 app.set("trust proxy", true);
-app.use(express.static(path.join(__dirname, "./public")));
+app.use(staticMiddleware);
 
 // Middlewares
 app.use(cookieParser());
-app.use(express.json());
+app.use(
+  express.json({
+    type: "application/json",
+  })
+);
 // no need allow CORS, configure in Vite proxy
 // app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(helmet());

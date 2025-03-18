@@ -13,12 +13,18 @@ import {
   TransactionFailedError,
 } from "couchbase";
 import { Restaurant } from "../restaurant/restaurantModel";
+import { g } from "vitest/dist/chunks/suite.qtkXWc6R.js";
 
 export async function getReservation(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
+  const user = req.locals?.user;
+  if (!user) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
   const { quizScope } = await getCouchbaseConnection();
   if (!quizScope) {
     res.status(500).json({ error: "Service is unavailable." });
@@ -26,9 +32,19 @@ export async function getReservation(
   }
 
   try {
-    const reservationData = await quizScope.query(
-      `SELECT r.* FROM reservations r`
-    );
+    let reservationData = null;
+    if (user.is_employee) {
+      reservationData = await quizScope.query(
+        `SELECT r.* FROM reservations r ORDER BY reservationDateTime`
+      );
+    } else {
+      reservationData = await quizScope.query(
+        `SELECT r.* FROM reservations r WHERE r.guestName = $1 ORDER BY reservationDateTime`,
+        {
+          parameters: [user.username],
+        }
+      );
+    }
     res.status(200).json(reservationData.rows);
   } catch (error) {
     console.error("Error fetching reservation data:", error);
@@ -69,17 +85,8 @@ export async function createReservation(req: Request, res: Response) {
       if (!restaurantContent) {
         throw new Error("Restaurant document not found");
       }
-      //2. insert reservation
-      newReservation = {
-        ...reservationBody,
-        type: "reservation",
-        guestName: user.username,
-        guestEmail: user.email,
-        id: docId,
-        createAt: new Date().getTime(),
-      };
-      await ctx.insert(reservations, docId, newReservation);
 
+      // find table
       const updatedRestaurant = structuredClone(restaurantContent);
       const tableId = reservationBody.tableInfo.id;
       const table = updatedRestaurant.tables.find((t) => t.id === tableId);
@@ -89,6 +96,28 @@ export async function createReservation(req: Request, res: Response) {
       if (table.capacity < 1) {
         throw new Error(`Insufficient capacity for table ${tableId}`);
       }
+
+      //2. insert reservation
+      newReservation = {
+        ...reservationBody,
+        type: "reservation",
+        // never trust user input
+        restaurantInfo: {
+          id: restaurantContent.id,
+          name: restaurantContent.name,
+          address: restaurantContent.address,
+        },
+        tableInfo: {
+          id: table.id,
+          size: table.size,
+        },
+        guestName: user.username,
+        guestEmail: user.email,
+        status: "confirmed",
+        id: docId,
+        createAt: new Date().getTime(),
+      };
+      await ctx.insert(reservations, docId, newReservation);
       // Decrement the capacity
       table.capacity -= 1;
       await ctx.replace(restaurantDoc, updatedRestaurant);
@@ -136,43 +165,44 @@ export async function updateReservation(req: Request, res: Response) {
     let newReservation = null;
     await couchbaseCluster?.transactions().run(async (ctx) => {
       const oldReservationResult = await ctx.get(reservations, id);
-      const oldReservation: Reservation = oldReservationResult.content;
 
+      const oldReservation: Reservation = oldReservationResult.content;
       if (!oldReservation) {
         throw new Error("Restaurant document not found");
       }
 
-      if (oldReservation.guestName !== user.username) {
+      if (!user.is_employee && oldReservation.guestName !== user.username) {
         throw new Error(
           "You do not have permission to update this reservation."
         );
       }
 
-      if (oldReservation.status !== "confirmed") {
+      if (oldReservation.status && oldReservation.status !== "confirmed") {
         throw new Error(
           "You can't update a reservation that is not confirmed."
         );
       }
-      //nomrally, if not change table, we can just update the reservation
-      if (oldReservation.tableInfo.id !== updatedReservationBody.tableInfo.id) {
-        const restaurantDoc = await ctx.get(
-          restaurant,
-          oldReservation.restaurantInfo.id
-        );
+      //nomrally, if user not change table, we can just update the reservation
+      // and we need get the restaurant info, also for table size info, in case use hack http body
+      const restaurantDoc = await ctx.get(
+        restaurant,
+        oldReservation.restaurantInfo.id
+      );
 
-        const restaurantContent: Restaurant = restaurantDoc?.content;
-        const updatedRestaurant = structuredClone(restaurantContent);
-        const oldTable = updatedRestaurant.tables.find(
-          (t) => t.id === oldReservation.tableInfo.id
+      const restaurantContent: Restaurant = restaurantDoc?.content;
+      const updatedRestaurant = structuredClone(restaurantContent);
+      const oldTable = updatedRestaurant.tables.find(
+        (t) => t.id === oldReservation.tableInfo.id
+      );
+      const table = updatedRestaurant.tables.find(
+        (t) => t.id === updatedReservationBody.tableInfo.id
+      );
+      if (!table || !oldTable) {
+        throw new Error(
+          `Table with ID new: ${updatedReservationBody.tableInfo.id} or old: ${oldReservation.tableInfo.id} not found`
         );
-        const table = updatedRestaurant.tables.find(
-          (t) => t.id === updatedReservationBody.tableInfo.id
-        );
-        if (!table || !oldTable) {
-          throw new Error(
-            `Table with ID new: ${updatedReservationBody.tableInfo.id} or old: ${oldReservation.tableInfo.id} not found`
-          );
-        }
+      }
+      if (oldReservation.tableInfo.id !== updatedReservationBody.tableInfo.id) {
         if (table.capacity < 1) {
           throw new Error(
             `Insufficient capacity for table ${updatedReservationBody.tableInfo.id}`
@@ -185,7 +215,13 @@ export async function updateReservation(req: Request, res: Response) {
       // Update the reservation
       newReservation = {
         ...oldReservationResult.content,
-        ...updatedReservationBody,
+        guestEmail: updatedReservationBody.guestEmail,
+        reservationDateTime: updatedReservationBody.reservationDateTime,
+        tableInfo: {
+          id: updatedReservationBody.tableInfo.id,
+          size: table.size,
+        },
+        specialRequests: updatedReservationBody.specialRequests,
         updatedAt: new Date().getTime(),
       };
       await ctx.replace(oldReservationResult, newReservation);
@@ -229,7 +265,10 @@ export async function updateStatusReservation(req: Request, res: Response) {
         throw new Error("Restaurant document not found");
       }
 
-      if (oldReservationResult.content.guestName !== user.username) {
+      if (
+        !user.is_employee &&
+        oldReservationResult.content.guestName !== user.username
+      ) {
         throw new Error(
           "You do not have permission to update this reservation."
         );

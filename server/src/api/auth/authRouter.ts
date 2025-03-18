@@ -7,9 +7,10 @@ import {
   UserSchema,
   LoginFormSchema,
   LoginResponseSchema,
+  SignoutSchema,
 } from "@/api/auth/authModel";
 import { validateRequest } from "@/common/utils/httpHandlers";
-import { createUser, getUserInfo, login } from "./authController";
+import { createUser, getUserInfo, login, signout } from "./authController";
 // import { userController } from "./userController";
 
 export const authRegistry = new OpenAPIRegistry();
@@ -52,3 +53,4 @@ authRegistry.registerPath({
 authRouter.post("/signup", validateRequest(UserSchema), createUser);
 authRouter.post("/login", validateRequest(LoginFormSchema), login);
 authRouter.get("/user", getUserInfo);
+authRouter.post("/signout", validateRequest(SignoutSchema), signout);
