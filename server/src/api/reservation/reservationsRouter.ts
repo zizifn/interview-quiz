@@ -18,10 +18,35 @@ import {
 } from "./reservationsModel";
 import { validateRequest } from "@/common/utils/httpHandlers";
 
-export const reservationRegistry = new OpenAPIRegistry();
 export const reservationRouter: Router = express.Router();
 
+// Setup router endpoints
+reservationRouter.get("/", getReservation);
+reservationRouter.post(
+  "/",
+  validateRequest(NewReservationSchema),
+  createReservation
+);
+reservationRouter.put(
+  "/:id",
+  validateRequest(UpdateReservationSchema),
+  updateReservation
+);
+reservationRouter.put(
+  "/:id/status",
+  validateRequest(UpdateStatusReservationSchema),
+  updateStatusReservation
+);
+
+// swagger
+export const reservationRegistry = new OpenAPIRegistry();
 reservationRegistry.register("Reservation", ReservationSchema);
+reservationRegistry.register("NewReservation", NewReservationSchema);
+reservationRegistry.register("UpdateReservation", UpdateReservationSchema);
+reservationRegistry.register(
+  "UpdateStatusReservation",
+  UpdateStatusReservationSchema
+);
 
 reservationRegistry.registerPath({
   method: "get",
@@ -57,7 +82,7 @@ reservationRegistry.registerPath({
     body: {
       content: {
         "application/json": {
-          schema: ReservationSchema,
+          schema: UpdateReservationSchema,
         },
       },
     },
@@ -66,34 +91,20 @@ reservationRegistry.registerPath({
 });
 
 reservationRegistry.registerPath({
-  method: "delete",
-  path: "/api/reservation/{id}",
+  method: "put",
+  path: "/api/reservation/{id}/status",
   tags: ["reservation"],
   request: {
     params: z.object({
       id: z.string().describe("Reservation ID"),
     }),
+    body: {
+      content: {
+        "application/json": {
+          schema: UpdateStatusReservationSchema,
+        },
+      },
+    },
   },
-  responses: createApiResponse(
-    z.object({ message: z.string() }),
-    "success",
-    200
-  ),
+  responses: createApiResponse(ReservationSchema, "success", 200),
 });
-
-reservationRouter.get("/", getReservation);
-reservationRouter.post(
-  "/",
-  validateRequest(NewReservationSchema),
-  createReservation
-);
-reservationRouter.put(
-  "/:id",
-  validateRequest(UpdateReservationSchema),
-  updateReservation
-);
-reservationRouter.put(
-  "/:id/status",
-  validateRequest(UpdateStatusReservationSchema),
-  updateStatusReservation
-);
