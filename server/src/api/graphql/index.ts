@@ -8,7 +8,10 @@ import {
   reservationQueries,
   reservationMutations,
 } from "./schema/reservationSchema";
-import { getRestaurants } from "./resolvers/restaurantResolvers";
+import {
+  getReservations,
+  getRestaurants,
+} from "./resolvers/restaurantResolvers";
 const graphqlRouter: Router = express.Router();
 const graphqlUIRouter: Router = express.Router();
 
@@ -30,7 +33,7 @@ const typeDefs = `
 // Combine all resolver objects
 export const rootResolver = {
   restaurants: getRestaurants,
-  // Add reservation resolvers here when implemented
+  reservations: getReservations,
 };
 
 const schema = buildSchema(typeDefs);

@@ -57,7 +57,6 @@ export const reservationSchema = `
 
 export const reservationQueries = `
   reservations: [Reservation]
-  reservation(id: String!): Reservation
 `;
 
 export const reservationMutations = `

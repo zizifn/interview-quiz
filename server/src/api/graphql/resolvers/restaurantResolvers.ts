@@ -29,5 +29,10 @@ async function getRestaurants(
 }
 
 // Import reservation resolvers
+import {
+  getReservations,
+  getReservation,
+  createReservation,
+} from "./reservationResolvers";
 
-export { getRestaurants };
+export { getRestaurants, getReservations, getReservation, createReservation };
