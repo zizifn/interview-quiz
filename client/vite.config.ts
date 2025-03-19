@@ -10,7 +10,14 @@ export default defineConfig({
     coverage: {
       enabled: true,
       reporter: ["text", "html", "json-summary", "json"],
-      exclude: ["**/node_modules/**", "**/index.ts, ", "vite.config.mts"],
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "**/node_modules/**",
+        "**/index.ts, ",
+        "vite.config.mts",
+        "src/vite-env.d.ts",
+        "src/components/ui/**",
+      ],
       reportOnFailure: true,
     },
     globals: true,
