@@ -6,7 +6,6 @@ import { updateReservationStatus, queryClient } from "@/lib/http";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// Mock the dependencies
 vi.mock("@/lib/http", () => ({
   updateReservationStatus: vi.fn(),
   queryClient: {
