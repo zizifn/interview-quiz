@@ -11,7 +11,6 @@ export const ReservationSchema = z.object({
     name: z.string().optional().default(""),
     address: z.string().optional(),
   }),
-  guestId: z.string(),
   guestName: z.string(),
   guestEmail: z.string().email(),
   reservationDateTime: z.number().int().positive(),

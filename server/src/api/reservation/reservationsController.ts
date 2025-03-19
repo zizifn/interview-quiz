@@ -24,30 +24,34 @@ export async function getReservation(
   }
   const { quizScope } = await getCouchbaseConnection();
   if (!quizScope) {
-    res.status(500).json({ error: "Service is unavailable." });
+    res.status(500).json({
+      message: `Service is unavailable.`,
+    });
     return;
   }
 
   try {
     const reservationData = await getReservationsService(quizScope, user);
     res.status(200).json(reservationData);
-  } catch (error) {
+  } catch (error: any) {
     req.log.error("Error fetching reservation data:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({
+      message: `Internal Server Error, ${error.message}, casue: ${error.cause?.message}`,
+    });
   }
 }
 
 export async function createReservation(req: Request, res: Response) {
   const user = req.locals?.user;
   if (!user) {
-    res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
     return;
   }
 
   try {
     const { quizScope, couchbaseCluster } = await getCouchbaseConnection();
     if (!quizScope || !couchbaseCluster) {
-      res.status(500).json({ error: "Service is unavailable." });
+      res.status(500).json({ message: "Service is unavailable." });
       return;
     }
 
@@ -64,7 +68,7 @@ export async function createReservation(req: Request, res: Response) {
   } catch (error: any) {
     req.log.error("Failed to create reservation:", error);
     res.status(500).json({
-      message: `Failed to create reservation, due to ${error?.message}`,
+      message: `Failed to create reservation, ${error.message}, casue: ${error.cause?.message}`,
     });
     return;
   }
@@ -83,7 +87,7 @@ export async function updateReservation(req: Request, res: Response) {
 
     const { quizScope, couchbaseCluster } = await getCouchbaseConnection();
     if (!quizScope || !couchbaseCluster) {
-      res.status(500).json({ error: "Service is unavailable." });
+      res.status(500).json({ message: "Service is unavailable." });
       return;
     }
 
@@ -98,10 +102,10 @@ export async function updateReservation(req: Request, res: Response) {
     res.status(200).json(updatedReservation);
     return;
   } catch (error: any) {
-    console.error("Failed to update reservation:", error);
-    res
-      .status(500)
-      .json({ message: `Failed to update reservation: ${error.message}` });
+    req.log.error("Failed to update reservation:", error);
+    res.status(500).json({
+      message: `Failed to update reservation: ${error.message}, casue: ${error.cause?.message}`,
+    });
     return;
   }
 }
@@ -110,7 +114,7 @@ export async function updateStatusReservation(req: Request, res: Response) {
   const { id } = req.params;
   const user = req.locals?.user;
   if (!user) {
-    res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
     return;
   }
   try {
@@ -118,7 +122,7 @@ export async function updateStatusReservation(req: Request, res: Response) {
 
     const { quizScope, couchbaseCluster } = await getCouchbaseConnection();
     if (!quizScope || !couchbaseCluster) {
-      res.status(500).json({ error: "Service is unavailable." });
+      res.status(500).json({ message: "Service is unavailable." });
       return;
     }
 
@@ -135,7 +139,7 @@ export async function updateStatusReservation(req: Request, res: Response) {
   } catch (error: any) {
     req.log.error("Failed to update reservation:", error);
     res.status(500).json({
-      message: `Failed to update reservation status: ${error.message}`,
+      message: `Failed to update reservation status: ${error.message}, casue: ${error.cause?.message}`,
     });
     return;
   }

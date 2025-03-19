@@ -192,7 +192,6 @@ export async function updateReservationService(
 
     return newReservation;
   } catch (error) {
-    console.error("Failed to update reservation:", error);
     throw error;
   }
 }
@@ -208,6 +207,14 @@ export async function updateStatusReservationService(
   const restaurant = quizScope.collection("restaurant");
   let newReservation = null;
 
+  // this is double check
+  if (
+    updatedReservationBody.status !== "completed" &&
+    updatedReservationBody.status !== "canceled"
+  ) {
+    throw new Error("Only can update to completed or canceled");
+  }
+
   try {
     await couchbaseCluster.transactions().run(async (ctx) => {
       const oldReservationResult = await ctx.get(reservations, id);
@@ -215,6 +222,11 @@ export async function updateStatusReservationService(
 
       if (!oldReservation) {
         throw new Error("Reservation document not found");
+      }
+      if (oldReservation.status && oldReservation.status !== "confirmed") {
+        throw new Error(
+          "You can't update a reservation that is not confirmed."
+        );
       }
 
       if (

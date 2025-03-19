@@ -8,19 +8,31 @@ import {
   reservationQueries,
   reservationMutations,
 } from "./schema/reservationSchema";
+import { getRestaurants } from "./resolvers/restaurantResolvers";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import {
+  createReservation,
   getReservations,
-  getRestaurants,
-} from "./resolvers/restaurantResolvers";
+  updateReservation,
+  updateStatusReservation,
+} from "./resolvers/reservationResolvers";
 const graphqlRouter: Router = express.Router();
 const graphqlUIRouter: Router = express.Router();
 
 // Combine all schema parts
 const typeDefs = `
   type Query {
+    hello(id: String): Hello
      ${restaurants}
      ${reservationQueries}
   }
+  type Hello {
+  nested: NestedHello
+    message: String
+  }
+    type NestedHello {
+    message: String
+    }
 
   type Mutation {
      ${reservationMutations}
@@ -31,19 +43,28 @@ const typeDefs = `
 `;
 
 // Combine all resolver objects
-export const rootResolver = {
-  restaurants: getRestaurants,
-  reservations: getReservations,
+const resolvers = {
+  Query: {
+    restaurants: getRestaurants,
+    reservations: getReservations,
+  },
+  Mutation: {
+    createReservation: createReservation,
+    updateReservation: updateReservation,
+    updateReservationStatus: updateStatusReservation,
+  },
 };
 
-const schema = buildSchema(typeDefs);
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
 
 graphqlRouter.all(
   "/",
   createHandler({
     schema: schema,
-    rootValue: rootResolver,
-    // resolvers: rootResolver,
+    // rootValue: rootResolver, // default rootResolver only have 3 agrs without parent, use makeExecutableSchema merge resolve and schema
     context: (req) => {
       // Access the user and session from the modified request object
       return {

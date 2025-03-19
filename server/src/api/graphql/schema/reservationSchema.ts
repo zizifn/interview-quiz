@@ -16,10 +16,14 @@ export const reservationSchema = `
     canceled
   }
 
+  enum UpdateReservationStatus {
+    completed
+    canceled
+  }
+
   type Reservation {
     id: String!
     restaurantInfo: RestaurantInfo!
-    guestId: String!
     guestName: String!
     guestEmail: String!
     reservationDateTime: Float!
@@ -44,6 +48,7 @@ export const reservationSchema = `
   }
 
   input UpdateReservationInput {
+    id: String!
     guestEmail: String!
     tableInfo: TableInfoInput!
     reservationDateTime: Float!
@@ -51,7 +56,8 @@ export const reservationSchema = `
   }
 
   input UpdateStatusReservationInput {
-    status: ReservationStatus!
+  id: String!
+    status: UpdateReservationStatus!
   }
 `;
 
@@ -61,6 +67,6 @@ export const reservationQueries = `
 
 export const reservationMutations = `
   createReservation(input: NewReservationInput!): Reservation
-  updateReservation(id: String!, input: UpdateReservationInput!): Reservation
-  updateReservationStatus(id: String!, input: UpdateStatusReservationInput!): Reservation
+  updateReservation(input: UpdateReservationInput!): Reservation
+  updateReservationStatus(input: UpdateStatusReservationInput!): Reservation
 `;

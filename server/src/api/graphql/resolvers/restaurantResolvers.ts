@@ -4,10 +4,12 @@ import { GraphQLContext } from "../type";
 import { getRestaurantService } from "@/api/restaurant/restaurantServices";
 
 async function getRestaurants(
+  _parent: any,
   _args: any,
   context: GraphQLContext,
   _info: GraphQLResolveInfo
 ) {
+  console.log("-----", _args, context, _info);
   const { user, logger } = context;
   if (!user) {
     throw new Error("Unauthorized");
@@ -28,11 +30,4 @@ async function getRestaurants(
   }
 }
 
-// Import reservation resolvers
-import {
-  getReservations,
-  getReservation,
-  createReservation,
-} from "./reservationResolvers";
-
-export { getRestaurants, getReservations, getReservation, createReservation };
+export { getRestaurants };

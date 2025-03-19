@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.0",
+    "@graphql-tools/schema": "^10.0.23",
     "@libsql/client": "^0.14.0",
     "cookie-parser": "^1.4.7",
     "cors": "2.8.5",
