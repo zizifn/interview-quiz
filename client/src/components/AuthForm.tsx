@@ -41,7 +41,7 @@ export default function AuthForm() {
         password: password,
       });
     } else {
-      const email = formData.get("email");
+      const email = formData.get("email") as string;
       signUpMutate({
         username: username,
         password: password,

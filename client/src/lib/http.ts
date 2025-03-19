@@ -13,7 +13,7 @@ async function getUser(): Promise<null | User> {
 
   if (response.status === 401) {
     return {
-      id: undefined,
+      id: 0,
       email: "",
       username: "",
       is_employee: false,
@@ -56,7 +56,15 @@ async function login(username: string, password: string): Promise<any> {
   return data;
 }
 
-async function signUp({ username, password, email }): Promise<any> {
+async function signUp({
+  username,
+  password,
+  email,
+}: {
+  username: string;
+  password: string;
+  email: string;
+}): Promise<any> {
   const url = `/api/auth/signup`;
   const response = await fetch(url, {
     method: "POST",
