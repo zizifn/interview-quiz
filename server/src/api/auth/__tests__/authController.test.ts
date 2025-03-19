@@ -35,9 +35,9 @@ vi.mock("@/db/db", () => ({
 // Import controllers after the mocks are set up
 
 describe("Auth Controller", () => {
-  let mockRequest;
-  let mockResponse;
-  let mockNext;
+  let mockRequest: any;
+  let mockResponse: any;
+  let mockNext: any;
 
   beforeEach(() => {
     mockRequest = {
@@ -87,7 +87,7 @@ describe("Auth Controller", () => {
       };
 
       const mockError = new Error("Constraint violation");
-      mockError.code = "SQLITE_CONSTRAINT";
+      (mockError as any).code = "SQLITE_CONSTRAINT";
 
       const mockInsert = vi.fn().mockReturnValue({
         values: vi.fn().mockRejectedValue(mockError),
@@ -115,7 +115,7 @@ describe("Auth Controller", () => {
         username: "testuser",
         password_hash: "hashed_password",
         is_employee: false,
-      };
+      } as any;
 
       const mockSession = {
         id: "session_id",
@@ -160,7 +160,7 @@ describe("Auth Controller", () => {
         id: 1,
         username: "testuser",
         password_hash: "hashed_password",
-      };
+      } as any;
 
       vi.mocked(getUser).mockResolvedValue(mockUser);
       vi.mocked(verifyPasswordHash).mockResolvedValue(false);

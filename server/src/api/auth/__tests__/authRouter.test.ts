@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { authRouter } from "../authRouter";
-import express from "express";
+import express, { type Express } from "express";
 import request from "supertest";
 import * as authController from "../authController";
 
@@ -12,11 +12,11 @@ vi.mock("../authController", () => ({
 }));
 
 vi.mock("@/common/utils/httpHandlers", () => ({
-  validateRequest: () => (req, res, next) => next(),
+  validateRequest: () => (req: any, res: any, next: any) => next(),
 }));
 
 describe("Auth Router", () => {
-  let app;
+  let app: Express;
 
   beforeEach(() => {
     vi.resetAllMocks();
