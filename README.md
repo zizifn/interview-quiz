@@ -27,13 +27,12 @@ npm run start:dev
 ### Docker Setup
 
 ```bash
-sudo docker run --rm -p 8888:8080 \
-  -e NODE_ENV='development' \
-  -e CORS_ORIGIN='*' \
-  -e COMMON_RATE_LIMIT_WINDOW_MS=1000 \
-  -e COMMON_RATE_LIMIT_MAX_REQUESTS=20 \
+sudo docker run --rm -p 3001:3000
   -e TURSO_DATABASE_URL='' \
-  -e TURSO_AUTH_TOKEN='e' \
+  -e TURSO_AUTH_TOKEN='' \
+  -e COUCHBASE_URL='' \
+  -e COUCHBASE_USER='' \
+  -e COUCHBASE_PASSWORD='' \
   zizifn/interview-quiz:latest
 ```
 

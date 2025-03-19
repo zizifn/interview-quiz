@@ -74,7 +74,10 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     });
     return;
   } catch (error) {
-    req.log.error("Error logging in:", error);
+    req.log.error(
+      `Error logging in: ${error?.toString()}: ${error?.stack}`,
+      error
+    );
     res.status(401).json({
       message: "Invalid username or password",
     });
@@ -87,8 +90,6 @@ export async function getUserInfo(
   next: NextFunction
 ) {
   const user = req.locals?.user;
-  console.log("getUserInfo called", user);
-
   if (!user) {
     res.status(401).json({ error: "Unauthorized" });
     return;

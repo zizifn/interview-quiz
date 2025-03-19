@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "build": "tsup",
-    "start:dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
+    "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "start:prod": "node dist/index.js",
     "lint": "biome lint",
     "lint:fix": "biome lint --fix",
