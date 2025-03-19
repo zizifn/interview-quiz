@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { authDB } from "@/db/db";
-import { userTable } from "@/db/schema";
 import { getCouchbaseConnection } from "@/db/couchbase";
+import { getRestaurantService } from "./restaurantServices";
 
 export async function getRestaurant(
   req: Request,
@@ -21,12 +20,10 @@ export async function getRestaurant(
   }
 
   try {
-    const restaurantData = await quizScope.query(
-      `SELECT r.* FROM restaurant r`
-    );
-    res.status(200).json(restaurantData.rows);
+    const result = await getRestaurantService(quizScope);
+    res.status(200).json(result);
   } catch (error) {
-    console.error("Error fetching restaurant data:", error);
+    req.log.error("Error fetching restaurant data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
