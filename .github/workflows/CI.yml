@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-assemble:
+  build-and-push-docker-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,18 +53,22 @@ jobs:
           npm run build
       
       - name: Create app directory structure
-        run: |
-          mkdir -p app/dist/public
+        run: |          
+          echo "Application assembled successfully
           
-          # Copy server node_modules to app
-          cp -r server/node_modules app/
-          
-          # Copy server dist to app/dist
-          cp -r server/dist app/
-          
-          # Copy client dist to app/dist/public
-          cp -r client/dist/* app/dist/public/
-
-          ls -al app/dist/public
-          
-          echo "Application assembled successfully in 'app' directory"
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: zizifn/interview-quiz:1.0.${{ github.run_number }},zizifn/interview-quiz:latest
