@@ -9,7 +9,6 @@ async function getRestaurants(
   context: GraphQLContext,
   _info: GraphQLResolveInfo
 ) {
-  console.log("-----", _args, context, _info);
   const { user, logger } = context;
   if (!user) {
     throw new Error("Unauthorized");
