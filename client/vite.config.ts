@@ -7,9 +7,15 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
+    coverage: {
+      enabled: true,
+      reporter: ["text", "html", "json-summary", "json"],
+      exclude: ["**/node_modules/**", "**/index.ts, ", "vite.config.mts"],
+      reportOnFailure: true,
+    },
     globals: true,
     environment: "jsdom",
-  } ,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

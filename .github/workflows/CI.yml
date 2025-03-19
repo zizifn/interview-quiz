@@ -30,14 +30,13 @@ jobs:
           cd server
           npm run test:cov
           
-      - name: 'Report Coverage'
-      # Set if: always() to also generate the report if tests are failing
-      # Only works if you set `reportOnFailure: true` in your vite config as specified above
+      - name: 'Report Backend Coverage'
         if: always() 
         uses:  davelosert/vitest-coverage-report-action@v2
         with:
-          name: 'backend-coverage-report'
+          name: 'backend-coverage'
           working-directory: server
+          file-coverage-mode: 'all'
 
       - name: Build Server
         run: |
@@ -55,11 +54,24 @@ jobs:
         run: |
           cd client
           npm ci
-      
+
       - name: Build Client
         run: |
           cd client
           npm run build
+
+      - name: Run Client Tests with Coverage
+        run: |
+          cd client
+          npm run test:coverage
+
+      - name: 'Report Frontend Coverage'
+        if: always() 
+        uses:  davelosert/vitest-coverage-report-action@v2
+        with:
+          name: 'Frontend-coverage'
+          working-directory: client
+          file-coverage-mode: 'all'
       
       - name: Create app directory structure
         run: |          
