@@ -8,34 +8,42 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function NavBar({ username, isEmployee }: { username: string, isEmployee: boolean }) {
-  const { userMode, setUserMode } = useContext(UserModeState)
+export default function NavBar({
+  username,
+  isEmployee,
+}: {
+  username: string;
+  isEmployee: boolean;
+}) {
+  const { userMode, setUserMode } = useContext(UserModeState);
 
   const { mutate } = useMutation({
     mutationKey: ["auth", "logout"],
     mutationFn: signOut,
     onSuccess: () => {
-      queryClient.setQueriesData({
-        queryKey: ["auth", "user"],
-      }, (oldData: any) => {
-        return {
-        };
-      });
+      queryClient.setQueriesData(
+        {
+          queryKey: ["auth", "user"],
+        },
+        () => {
+          return {};
+        },
+      );
       queryClient.clear();
     },
   });
   const navigation = [];
-  if (userMode === 'guest') {
+  if (userMode === "guest") {
     navigation.push({ name: "Employee View", href: "#", current: false });
   } else {
     navigation.push({ name: "Guest  View", href: "#", current: false });
   }
 
   function switchMode() {
-    if (userMode === 'guest') {
-      setUserMode('employee');
+    if (userMode === "guest") {
+      setUserMode("employee");
     } else {
-      setUserMode('guest');
+      setUserMode("guest");
     }
     mutate();
   }
@@ -47,16 +55,15 @@ export default function NavBar({ username, isEmployee }: { username: string, isE
     <Disclosure as="nav" className="bg-white">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between gap-1">
-
           <div className="flex flex-1 items-stretch justify-start">
             <div className="flex shrink-0 items-center bg-white">
               <img
                 alt="Your Company"
                 src="https://www.hilton.com/modules/assets/svgs/logos/WW.svg"
-                className="h-8 w-auto "
+                className="h-8 w-auto"
               />
             </div>
-            <div className="block ml-auto">
+            <div className="ml-auto block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
                   <a
@@ -67,7 +74,7 @@ export default function NavBar({ username, isEmployee }: { username: string, isE
                       item.current
                         ? "bg-gray-900 text-white"
                         : "text-gray-500 hover:bg-gray-700 hover:text-white",
-                      "rounded-md px-3 py-2 text-sm font-medium"
+                      "rounded-md px-3 py-2 text-sm font-medium",
                     )}
                   >
                     {item.name}
@@ -78,14 +85,14 @@ export default function NavBar({ username, isEmployee }: { username: string, isE
           </div>
           {username && (
             <>
-              <div className="text-wrap w-20 inset-y-0 right-0 flex items-center static inset-auto ml-6 pr-0">
+              <div className="static inset-auto inset-y-0 right-0 ml-6 flex w-20 items-center pr-0 text-wrap">
                 {/* Profile dropdown */}
-              { username || ""} {isEmployee? " (Employee)" : " (Guest)"}
+                {username || ""} {isEmployee ? " (Employee)" : " (Guest)"}
               </div>
               <button
                 onClick={onSignout}
                 type="button"
-                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
+                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
               >
                 Sign out
               </button>

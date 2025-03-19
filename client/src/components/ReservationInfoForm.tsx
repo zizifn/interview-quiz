@@ -47,7 +47,7 @@ function ReservationInfoForm({
   const { mutate, error, isPending } = useMutation({
     mutationKey: ["reservation", "create"],
     mutationFn: createReservation,
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["reservations"],
       });
@@ -66,9 +66,9 @@ function ReservationInfoForm({
   } = useMutation({
     mutationKey: ["reservation", "update"],
     mutationFn: (data: UpdateReservation) => {
-      return updateReservation(reservation?.id, data);
+      return updateReservation(reservation?.id || "", data);
     },
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["reservations"],
       });

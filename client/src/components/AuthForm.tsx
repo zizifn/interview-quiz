@@ -1,14 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login, queryClient, signUp } from "@/lib/http";
 import { SignUpSuccessDialog } from "./SignUpSuccessDialog";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = React.useState(true);
-  const { data, isPending, error, mutate } = useMutation({
+  const { isPending, error, mutate } = useMutation({
     mutationKey: ["auth", "login"],
-    mutationFn: (params: {username: string, password: string}) => login(params.username, params.password),
-    onSuccess: (data, variables) => {
+    mutationFn: (params: { username: string; password: string }) =>
+      login(params.username, params.password),
+    onSuccess: (_data, variables) => {
       queryClient.setQueryData(["auth", "user"], {
         ...variables,
       });
@@ -18,7 +19,6 @@ export default function AuthForm() {
     },
   });
   const {
-    data: signUpData,
     isPending: signUpPending,
     error: signUpError,
     mutate: signUpMutate,
@@ -26,7 +26,7 @@ export default function AuthForm() {
   } = useMutation({
     mutationKey: ["auth", "signup"],
     mutationFn: signUp,
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       setIsLogin(true);
     },
   });
@@ -54,7 +54,10 @@ export default function AuthForm() {
   return (
     <>
       {signUpSuccess && <SignUpSuccessDialog></SignUpSuccessDialog>}
-      <div data-testid="auth-form" className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div
+        data-testid="auth-form"
+        className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8"
+      >
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             alt="Your Company"
@@ -71,7 +74,7 @@ export default function AuthForm() {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm/6 font-medium text-gray-900 text-left"
+                className="block text-left text-sm/6 font-medium text-gray-900"
               >
                 User Name
               </label>
@@ -90,7 +93,7 @@ export default function AuthForm() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm/6 font-medium text-gray-900 text-left"
+                  className="block text-left text-sm/6 font-medium text-gray-900"
                 >
                   Email address
                 </label>
@@ -110,7 +113,7 @@ export default function AuthForm() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm/6 font-medium text-gray-900 text-left"
+                className="block text-left text-sm/6 font-medium text-gray-900"
               >
                 Password
               </label>
@@ -127,12 +130,12 @@ export default function AuthForm() {
               </div>
             </div>
             {error && (
-              <p className="text-red-600 font-bold text-base/6">
+              <p className="text-base/6 font-bold text-red-600">
                 Unable login, please check username or password!
               </p>
             )}
             {signUpError && (
-              <p className="text-red-600 font-bold text-base/6">
+              <p className="text-base/6 font-bold text-red-600">
                 {signUpError.message}
               </p>
             )}

@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type User = {
   id: number;
   email: string;
@@ -21,7 +21,7 @@ async function getUser(): Promise<null | User> {
   }
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while get user, error code: " + response.status
+      "An error occurred while get user, error code: " + response.status,
     );
     throw error;
   }
@@ -46,13 +46,12 @@ async function login(username: string, password: string): Promise<any> {
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while get user, error code: " + response.status
+      "An error occurred while get user, error code: " + response.status,
     );
     throw error;
   }
 
   const data = await response.json();
-
 
   return data;
 }
@@ -96,7 +95,7 @@ async function signOut(): Promise<any> {
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while signout, error code: " + response.status
+      "An error occurred while signout, error code: " + response.status,
     );
     throw error;
   }
@@ -120,15 +119,15 @@ type Reservation = {
   tableInfo: {
     id: string;
     size: number;
-  }
-}
+  };
+};
 async function getReservation(): Promise<Reservation[]> {
   const url = `/api/reservation`;
   const response = await fetch(url);
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while get reservation, error code: " + response.status
+      "An error occurred while get reservation, error code: " + response.status,
     );
     throw error;
   }
@@ -138,22 +137,24 @@ async function getReservation(): Promise<Reservation[]> {
   return data;
 }
 
-async function getRestaurants(): Promise<{
-  id: string;
-  name: string;
-  phone: string;
-  tables: {
+async function getRestaurants(): Promise<
+  {
     id: string;
-    size: number;
-    capacity: number;
+    name: string;
+    phone: string;
+    tables: {
+      id: string;
+      size: number;
+      capacity: number;
+    }[];
   }[]
-}[]> {
+> {
   const url = `/api/restaurants`;
   const response = await fetch(url);
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while get restaurants, error code: " + response.status
+      "An error occurred while get restaurants, error code: " + response.status,
     );
     throw error;
   }
@@ -162,8 +163,6 @@ async function getRestaurants(): Promise<{
 
   return data;
 }
-
-
 
 type NewReservation = {
   restaurantInfo: {
@@ -174,8 +173,7 @@ type NewReservation = {
     id: string;
   };
   specialRequests: string;
-}
-
+};
 
 async function createReservation(newReservation: NewReservation): Promise<any> {
   const url = `/api/reservation`;
@@ -188,7 +186,10 @@ async function createReservation(newReservation: NewReservation): Promise<any> {
   });
 
   if (!response.ok) {
-    const error = new Error("An error occurred while create reservation, please try again. Error code: " + response.status);
+    const error = new Error(
+      "An error occurred while create reservation, please try again. Error code: " +
+        response.status,
+    );
     throw error;
   }
 
@@ -197,7 +198,6 @@ async function createReservation(newReservation: NewReservation): Promise<any> {
   return data;
 }
 
-
 type UpdateReservation = {
   guestEmail: string;
   tableInfo: {
@@ -205,9 +205,12 @@ type UpdateReservation = {
   };
   reservationDateTime: number;
   specialRequests: string;
-}
+};
 
-async function updateReservation(id: string, updateReservation: UpdateReservation): Promise<any> {
+async function updateReservation(
+  id: string,
+  updateReservation: UpdateReservation,
+): Promise<any> {
   const url = `/api/reservation/${id}`;
   const response = await fetch(url, {
     method: "PUT",
@@ -218,7 +221,10 @@ async function updateReservation(id: string, updateReservation: UpdateReservatio
   });
 
   if (!response.ok) {
-    const error = new Error("An error occurred while update reservation, please try again. Error code: " + response.status);
+    const error = new Error(
+      "An error occurred while update reservation, please try again. Error code: " +
+        response.status,
+    );
     throw error;
   }
 
@@ -227,8 +233,11 @@ async function updateReservation(id: string, updateReservation: UpdateReservatio
   return data;
 }
 
-type ReservationStatus = 'confirmed' | 'canceled' | 'completed';
-async function updateReservationStatus(id: string, status: ReservationStatus): Promise<any> {
+type ReservationStatus = "confirmed" | "canceled" | "completed";
+async function updateReservationStatus(
+  id: string,
+  status: ReservationStatus,
+): Promise<any> {
   const url = `/api/reservation/${id}/status`;
   const response = await fetch(url, {
     method: "PUT",
@@ -236,12 +245,15 @@ async function updateReservationStatus(id: string, status: ReservationStatus): P
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      status
+      status,
     }),
   });
 
   if (!response.ok) {
-    const error = new Error("An error occurred while update reservation status, please try again. Error code: " + response.status);
+    const error = new Error(
+      "An error occurred while update reservation status, please try again. Error code: " +
+        response.status,
+    );
     throw error;
   }
 
@@ -250,9 +262,24 @@ async function updateReservationStatus(id: string, status: ReservationStatus): P
   return data;
 }
 
-
 const queryClient = new QueryClient();
 
-export { getUser, login, signOut, signUp, getReservation, getRestaurants, updateReservationStatus, createReservation, updateReservation, queryClient };
-export type { NewReservation, Reservation, UpdateReservation, User, ReservationStatus };
-
+export {
+  getUser,
+  login,
+  signOut,
+  signUp,
+  getReservation,
+  getRestaurants,
+  updateReservationStatus,
+  createReservation,
+  updateReservation,
+  queryClient,
+};
+export type {
+  NewReservation,
+  Reservation,
+  UpdateReservation,
+  User,
+  ReservationStatus,
+};
