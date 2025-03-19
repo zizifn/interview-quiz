@@ -4,9 +4,9 @@ import { GraphQLContext } from "../type";
 import { getRestaurantService } from "@/api/restaurant/restaurantServices";
 
 async function getRestaurants(
-  args: any,
+  _args: any,
   context: GraphQLContext,
-  info: GraphQLResolveInfo
+  _info: GraphQLResolveInfo
 ) {
   const { user, logger } = context;
   if (!user) {
@@ -27,5 +27,7 @@ async function getRestaurants(
     throw new Error("Internal Server Error");
   }
 }
+
+// Import reservation resolvers
 
 export { getRestaurants };

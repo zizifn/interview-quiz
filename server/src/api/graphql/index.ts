@@ -3,23 +3,34 @@ import { ruruHTML } from "ruru/server";
 import express, { Request, Response, Router } from "express";
 import { buildSchema } from "graphql";
 import { restaurantSchema, restaurants } from "./schema/restaurantSchema";
-import { getRestaurants } from "./resolvers/queryResolvers";
-import { GraphQLContext } from "./type";
-
+import {
+  reservationSchema,
+  reservationQueries,
+  reservationMutations,
+} from "./schema/reservationSchema";
+import { getRestaurants } from "./resolvers/restaurantResolvers";
 const graphqlRouter: Router = express.Router();
 const graphqlUIRouter: Router = express.Router();
 
 // Combine all schema parts
 const typeDefs = `
   type Query {
-     restaurants: [Restaurant]
+     ${restaurants}
+     ${reservationQueries}
   }
+
+  type Mutation {
+     ${reservationMutations}
+  }
+  
   ${restaurantSchema}
+  ${reservationSchema}
 `;
 
 // Combine all resolver objects
 export const rootResolver = {
   restaurants: getRestaurants,
+  // Add reservation resolvers here when implemented
 };
 
 const schema = buildSchema(typeDefs);
