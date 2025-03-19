@@ -9,9 +9,19 @@ export const env = cleanEnv(process.env, {
     choices: ["development", "production", "test"],
   }),
   PORT: port({ devDefault: testOnly(3000) }),
-  COUCHBASE_URL: str(),
-  COUCHBASE_USER: str(),
-  COUCHBASE_PASSWORD: str(),
-  TURSO_DATABASE_URL: str(),
-  TURSO_AUTH_TOKEN: str(),
+  COUCHBASE_URL: str({
+    devDefault: testOnly("test"),
+  }),
+  COUCHBASE_USER: str({
+    devDefault: testOnly("test"),
+  }),
+  COUCHBASE_PASSWORD: str({
+    devDefault: testOnly("test"),
+  }),
+  TURSO_DATABASE_URL: str({
+    devDefault: testOnly("test"),
+  }),
+  TURSO_AUTH_TOKEN: str({
+    devDefault: testOnly("test"),
+  }),
 });
