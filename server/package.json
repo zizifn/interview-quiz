@@ -21,6 +21,8 @@
     "@asteasolutions/zod-to-openapi": "7.3.0",
     "@graphql-tools/schema": "^10.0.23",
     "@libsql/client": "^0.14.0",
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
     "cookie-parser": "^1.4.7",
     "cors": "2.8.5",
     "couchbase": "^4.4.5",
