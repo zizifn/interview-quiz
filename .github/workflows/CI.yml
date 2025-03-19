@@ -1,0 +1,70 @@
+name: Build Project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js for Server
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+      
+      - name: Install Server Dependencies
+        run: |
+          cd server
+          npm ci
+
+      - name: Run Server Tests with Coverage
+        run: |
+          cd server
+          npm run test:cov
+
+      - name: Build Server
+        run: |
+          cd server
+          npm run build
+      
+      - name: Setup Node.js for Client
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+      
+      - name: Install Client Dependencies
+        run: |
+          cd client
+          npm ci
+      
+      - name: Build Client
+        run: |
+          cd client
+          npm run build
+      
+      - name: Create app directory structure
+        run: |
+          mkdir -p app/dist/public
+          
+          # Copy server node_modules to app
+          cp -r server/node_modules app/
+          
+          # Copy server dist to app/dist
+          cp -r server/dist app/
+          
+          # Copy client dist to app/dist/public
+          cp -r client/dist/* app/dist/public/
+
+          ls -al app/dist/public
+          
+          echo "Application assembled successfully in 'app' directory"
