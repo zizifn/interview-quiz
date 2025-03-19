@@ -54,7 +54,7 @@ jobs:
       
       - name: Create app directory structure
         run: |          
-          echo "Application assembled successfully
+          echo "Application assembled successfully"
           
       - name: Login to Docker Hub
         uses: docker/login-action@v3
