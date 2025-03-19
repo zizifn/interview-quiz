@@ -39,7 +39,6 @@ describe("Restaurant Controller", () => {
   it("should return 401 if user is not authenticated", async () => {
     const req = { ...mockRequest(), locals: {} } as any;
     const res = mockResponse();
-
     await getRestaurant(req, res, mockNext);
 
     expect(res.status).toHaveBeenCalledWith(401);

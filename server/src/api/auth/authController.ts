@@ -72,8 +72,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       name: user.username,
       isEmployee: user.is_employee,
     });
+    return;
   } catch (error) {
-    next(error);
+    req.log.error("Error logging in:", error);
+    res.status(401).json({
+      message: "Invalid username or password",
+    });
   }
 }
 
@@ -98,12 +102,21 @@ export async function getUserInfo(
 
 export async function signout(req: Request, res: Response, next: NextFunction) {
   const session = req.locals?.session;
-  // clear cookies
-  deleteSessionTokenCookie(res);
-  if (session?.id) {
-    invalidateSession(session.id);
+  try {
+    // clear cookies
+    deleteSessionTokenCookie(res);
+    if (session?.id) {
+      invalidateSession(session.id);
+    }
+    res.status(200).json({
+      message: "Logout successful",
+    });
+    return;
+  } catch (error) {
+    req.log.error("Error signing out:", error);
+    res.status(500).json({
+      message: "Logout failed",
+    });
+    return;
   }
-  res.status(200).json({
-    message: "Logout successful",
-  });
 }

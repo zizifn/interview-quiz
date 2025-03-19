@@ -11,7 +11,6 @@ import {
 } from "@/api/auth/authModel";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { createUser, getUserInfo, login, signout } from "./authController";
-// import { userController } from "./userController";
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
