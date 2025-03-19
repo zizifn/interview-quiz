@@ -1,5 +1,5 @@
 
-FROM node:22.14.0-slim
+FROM node:lts-slim
 WORKDIR /app
 ENV NODE_ENV=production
 # Copy server production dependencies
