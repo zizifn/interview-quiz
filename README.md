@@ -152,7 +152,14 @@ Couchbase Document:
 - `reservations`: Reservation document
 - `restaurant`: Restaurant documents
 
-**APIs**:
+Couchbase Index:
+Source code is in `server/src/db/couchbase/test/index.ts`
+
+- `reservationDateTime`: Index for reservation date and time
+- `guestName`: Index for guest name
+- `eservationDateTime,guestName `: Composite index for reservation date, time, and guest name
+
+  **APIs**:
 
 - `/api/restaurants`: Get all restaurants with tables info including capacity
 - GET `/api/reservations`: Get all reservations
