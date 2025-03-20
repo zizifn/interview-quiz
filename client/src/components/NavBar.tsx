@@ -36,7 +36,7 @@ export default function NavBar({
   if (userMode === "guest") {
     navigation.push({ name: "Employee View", href: "#", current: false });
   } else {
-    navigation.push({ name: "Guest  View", href: "#", current: false });
+    navigation.push({ name: "Guest View", href: "#", current: false });
   }
 
   function switchMode() {
@@ -65,21 +65,22 @@ export default function NavBar({
             </div>
             <div className="ml-auto block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    onClick={switchMode}
-                    aria-current={item.current ? "page" : undefined}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-500 hover:bg-gray-700 hover:text-white",
-                      "rounded-md px-3 py-2 text-sm font-medium",
-                    )}
-                  >
-                    {item.name}
-                  </a>
-                ))}
+                {!isEmployee &&
+                  navigation.map((item) => (
+                    <a
+                      key={item.name}
+                      onClick={switchMode}
+                      aria-current={item.current ? "page" : undefined}
+                      className={classNames(
+                        item.current
+                          ? "bg-gray-900 text-white"
+                          : "text-gray-500 hover:bg-gray-700 hover:text-white",
+                        "rounded-md px-3 py-2 text-sm font-medium",
+                      )}
+                    >
+                      {item.name}
+                    </a>
+                  ))}
               </div>
             </div>
           </div>

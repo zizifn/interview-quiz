@@ -14,15 +14,7 @@ import {
 import { Select } from "./ui/catalyst/select";
 import { useRestaurants, useUser } from "@/lib/hooks";
 import { useMutation } from "@tanstack/react-query";
-function convertToDateTimeLocalString(date: Date) {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
+import { convertToDateTimeLocalString } from "@/lib/utils";
 
 function ReservationInfoForm({
   onconfirm,
@@ -193,6 +185,7 @@ function ReservationInfoForm({
             <Label>Expected Arrival Time:</Label>
             <Input
               required
+              min={convertToDateTimeLocalString(new Date())}
               type="datetime-local"
               name="arrival_time"
               defaultValue={defaultArrivalTime}

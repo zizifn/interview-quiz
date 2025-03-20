@@ -5,7 +5,12 @@ import { SignUpSuccessDialog } from "./SignUpSuccessDialog";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = React.useState(true);
-  const { isPending, error, mutate } = useMutation({
+  const {
+    isPending,
+    error,
+    mutate,
+    reset: resetLogin,
+  } = useMutation({
     mutationKey: ["auth", "login"],
     mutationFn: (params: { username: string; password: string }) =>
       login(params.username, params.password),
@@ -23,6 +28,7 @@ export default function AuthForm() {
     error: signUpError,
     mutate: signUpMutate,
     isSuccess: signUpSuccess,
+    reset: resetSignUp,
   } = useMutation({
     mutationKey: ["auth", "signup"],
     mutationFn: signUp,
@@ -30,6 +36,16 @@ export default function AuthForm() {
       setIsLogin(true);
     },
   });
+
+  function toggleAuthMode(mode: boolean) {
+    setIsLogin(mode);
+    if (mode) {
+      resetSignUp();
+    } else {
+      resetLogin();
+    }
+  }
+
   function sumbitClick(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -164,7 +180,7 @@ export default function AuthForm() {
             <p className="mt-10 text-center text-sm/6 text-gray-500">
               Not a member?{" "}
               <a
-                onClick={() => setIsLogin(false)}
+                onClick={() => toggleAuthMode(false)}
                 className="font-semibold text-indigo-600 hover:text-indigo-500"
               >
                 SignUp
@@ -175,7 +191,7 @@ export default function AuthForm() {
             <p className="mt-10 text-center text-sm/6 text-gray-500">
               Already a member?{" "}
               <a
-                onClick={() => setIsLogin(true)}
+                onClick={() => toggleAuthMode(true)}
                 className="font-semibold text-indigo-600 hover:text-indigo-500"
               >
                 SignIn

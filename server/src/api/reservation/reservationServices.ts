@@ -17,11 +17,11 @@ export async function getReservationsService(quizScope: Scope, user: any) {
     let reservationData = null;
     if (user.is_employee) {
       reservationData = await quizScope.query(
-        `SELECT r.* FROM reservations r ORDER BY reservationDateTime`
+        `SELECT r.* FROM reservations r WHERE r.reservationDateTime > (NOW_MILLIS() - 21600000) ORDER BY r.reservationDateTime Desc`
       );
     } else {
       reservationData = await quizScope.query(
-        `SELECT r.* FROM reservations r WHERE r.guestName = $1 ORDER BY reservationDateTime`,
+        `SELECT r.* FROM reservations r WHERE r.guestName = $1 AND r.reservationDateTime > (NOW_MILLIS() - 21600000) ORDER BY r.reservationDateTime Desc`,
         {
           parameters: [user.username],
         }

@@ -15,7 +15,7 @@ function useRestaurants(usrename: string) {
   return useQuery({
     queryKey: ["restaurants"],
     queryFn: getRestaurants,
-    staleTime: 1000 * 60 * 5,
+    // staleTime: 1000 * 60 * 5,
     enabled: !!usrename,
   });
 }
