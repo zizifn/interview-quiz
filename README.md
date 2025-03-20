@@ -1,5 +1,8 @@
 # interview-quiz
 
+> [!IMPORTANT]
+> Due to I use cloud service for DB, so when testing you can encounter network faild issue, just click again in the React app.
+
 ## Setup
 
 ### Local Setup
@@ -11,7 +14,7 @@ Please make sure you have `.env` file in the `server` folder.
 ```bash
 cd server
 npm install
-npm run start:dev
+npm run dev
 ```
 
 > couchbase package have issue in 淘宝 mirror. Don't know why..
