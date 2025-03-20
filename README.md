@@ -134,12 +134,12 @@ https://github.com/zizifn/interview-quiz/actions
 
 **Tables:**
 
-- `user`: User table with email and hash_password
+- `user`: User table with user info hash_password
 - `session`: Session table with user ID and session token
 
 **APIs**:
 
-- `/api/auth/signup`: User login endpoint
+- `/api/auth/signup`: User signup endpoint
 - `/api/auth/login`: User login endpoint
 - `/api/auth/logout`: User logout endpoint
 - `/api/auth/user`: Get current user info endpoint
