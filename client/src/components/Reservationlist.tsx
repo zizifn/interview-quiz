@@ -26,7 +26,6 @@ function ReservationList({ isEmployee }: { isEmployee: boolean }) {
       </Alert>
     );
   }
-  console.log("reservation data", data);
   if (isSuccess && data?.length === 0) {
     return (
       <Alert>
