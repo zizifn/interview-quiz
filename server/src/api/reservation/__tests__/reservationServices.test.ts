@@ -99,7 +99,7 @@ describe("Reservation Services", () => {
       );
 
       expect(mockScope.query).toHaveBeenCalledWith(
-        "SELECT r.* FROM reservations r ORDER BY reservationDateTime"
+        "SELECT r.* FROM reservations r WHERE r.reservationDateTime > (NOW_MILLIS() - 21600000) ORDER BY r.reservationDateTime Desc"
       );
       expect(result).toEqual(mockQueryResult.rows);
     });
@@ -108,7 +108,7 @@ describe("Reservation Services", () => {
       const result = await getReservationsService(mockScope as Scope, mockUser);
 
       expect(mockScope.query).toHaveBeenCalledWith(
-        "SELECT r.* FROM reservations r WHERE r.guestName = $1 ORDER BY reservationDateTime",
+        "SELECT r.* FROM reservations r WHERE r.guestName = $1 AND r.reservationDateTime > (NOW_MILLIS() - 21600000) ORDER BY r.reservationDateTime Desc",
         { parameters: [mockUser.username] }
       );
       expect(result).toEqual(mockQueryResult.rows);
