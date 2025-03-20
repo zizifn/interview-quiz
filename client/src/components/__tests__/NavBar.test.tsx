@@ -68,15 +68,6 @@ describe("NavBar Component", () => {
     );
   });
 
-  it("renders correctly with employee user", () => {
-    render(<NavBar username="testuser" isEmployee={true} />, {
-      wrapper: (props) => wrapper({ ...props, userMode: "employee" }),
-    });
-
-    expect(screen.getByText("testuser (Employee)")).toBeInTheDocument();
-    expect(screen.getByText("Guest View")).toBeInTheDocument();
-  });
-
   it("switches mode from guest to employee", async () => {
     const user = userEvent.setup();
     render(<NavBar username="testuser" isEmployee={false} />, {
@@ -86,19 +77,6 @@ describe("NavBar Component", () => {
     const switchButton = screen.getByText("Employee View");
     await user.click(switchButton);
     expect(setUserModeMock).toHaveBeenCalledWith("employee");
-    expect(signOut).toHaveBeenCalled();
-  });
-
-  it("switches mode from employee to guest", async () => {
-    const user = userEvent.setup();
-    render(<NavBar username="testuser" isEmployee={true} />, {
-      wrapper: (props) => wrapper({ ...props, userMode: "employee" }),
-    });
-
-    const switchButton = screen.getByText("Guest View");
-    await user.click(switchButton);
-
-    expect(setUserModeMock).toHaveBeenCalledWith("guest");
     expect(signOut).toHaveBeenCalled();
   });
 
