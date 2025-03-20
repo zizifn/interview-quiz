@@ -22,7 +22,7 @@ authRegistry.register("Signout", SignoutSchema);
 
 authRegistry.registerPath({
   method: "post",
-  path: "/auth/signup",
+  path: "/api/auth/signup",
   tags: ["auth"],
   request: {
     body: {
@@ -37,7 +37,7 @@ authRegistry.registerPath({
 });
 authRegistry.registerPath({
   method: "post",
-  path: "/auth/login",
+  path: "/api/auth/login",
   tags: ["auth"],
   request: {
     body: {
@@ -53,14 +53,14 @@ authRegistry.registerPath({
 
 authRegistry.registerPath({
   method: "get",
-  path: "/auth/user",
+  path: "/api/auth/user",
   tags: ["auth"],
   responses: createApiResponse(UserSchema, "Success", 200),
 });
 
 authRegistry.registerPath({
   method: "post",
-  path: "/auth/signout",
+  path: "/api/auth/signout",
   tags: ["auth"],
   request: {
     body: {

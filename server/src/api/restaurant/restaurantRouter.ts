@@ -14,7 +14,7 @@ restaurantRegistry.register("Restaurant", RestaurantSchema);
 
 restaurantRegistry.registerPath({
   method: "get",
-  path: "/restaurants",
+  path: "/api/restaurants",
   tags: ["restaurant"],
   responses: createApiResponse(z.array(RestaurantSchema), "success", 200),
 });

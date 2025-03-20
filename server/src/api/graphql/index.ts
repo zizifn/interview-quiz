@@ -22,18 +22,9 @@ const graphqlUIRouter: Router = express.Router();
 // Combine all schema parts
 const typeDefs = `
   type Query {
-    hello(id: String): Hello
      ${restaurants}
      ${reservationQueries}
   }
-  type Hello {
-  nested: NestedHello
-    message: String
-  }
-    type NestedHello {
-    message: String
-    }
-
   type Mutation {
      ${reservationMutations}
   }
