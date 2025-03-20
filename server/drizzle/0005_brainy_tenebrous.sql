@@ -1,0 +1,1 @@
+CREATE INDEX `idx_is_employee` ON `user` (`is_employee`);

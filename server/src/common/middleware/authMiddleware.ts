@@ -14,7 +14,6 @@ import type {
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const sessionToken = req.cookies.session;
-  console.log("authMiddleware called", sessionToken);
   if (!sessionToken) {
     next();
     return;

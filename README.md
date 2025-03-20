@@ -152,8 +152,9 @@ Couchbase Document:
 - `reservations`: Reservation document
 - `restaurant`: Restaurant documents
 
-Couchbase Index:
-Source code is in `server/src/db/couchbase/test/index.ts`
+**Couchbase Index**:
+
+Source code is in, need prepare it first `server/src/db/couchbase/test/index.ts`
 
 - `reservationDateTime`: Index for reservation date and time
 - `guestName`: Index for guest name
