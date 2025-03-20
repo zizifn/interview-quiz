@@ -21,7 +21,7 @@ npm run dev
 
 #### client
 
-> Please make sure you have `vite.config.ts` proxy settings to point to your lcoal server.
+> Please make sure you have `vite.config.ts` proxy settings to point to your local Node.js API server.
 
 ```bash
 cd client
