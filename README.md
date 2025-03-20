@@ -105,11 +105,15 @@ https://github.com/zizifn/interview-quiz/actions
 
 - `/src`: Main source code directory
   - `/api`: API endpoints and business logic
-    - `/auth`: Authentication endpoints
-    - `/restaurant`: Restaurant endpoints
-    - `/reservation`: Reservation endpoints
+    - `/auth`: Authentication features
+    - `/restaurant`: Restaurant features
+    - `/reservation`: Reservation features
+      - `__tests__`: Unit tests for reservation features
+      - `reservationRouter.ts`: Router for reservation endpoints
+      - `reservationController.ts`: Controller for reservation business logic
+      - `reservationService.ts`: Service for reservation business logic share with **GraphQL**
     - `/graphql`: GraphQL schema, resolvers, and router
-    - `/healthCheck`: Health check endpoints
+    - `/healthCheck`: Health check
   - `/api-docs`: OpenAPI/Swagger router
   - `/common`: Shared utilities and middleware
     - `/middleware`: Express middleware (auth, error handling)
@@ -188,6 +192,7 @@ Couchbase Document:
     - `/ui`: UI components library
       - `/catalyst`: Advanced UI building blocks via Taildwind UI
     - Application-specific components (NavBar, AuthForm, etc.)
+      - `__tests__`: Unit tests for components
       - `AuthForm.tsx`: Authentication form for user login and registration
       - `NavBar.tsx`: Navigation bar component with user authentication status and mode switching
       - `LoadingSkeleton.tsx`: Loading placeholder components using Skeleton UI for async data fetching
