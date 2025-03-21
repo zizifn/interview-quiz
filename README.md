@@ -1,7 +1,7 @@
 # interview-quiz
 
 > [!IMPORTANT]
-> Due to I use cloud service for DB, so when testing you can encounter network faild issue, just click again in the React app.
+> Due to I used cloud service for DB, so when testing you may encounter **network faild** issue, just click again in the React app.
 
 ## Setup
 
