@@ -80,6 +80,8 @@ https://github.com/zizifn/interview-quiz/actions
 
   Choose this libary because it's simple!
 
+- **swagger-ui** for openapi swagger 
+
 - **Vitest**
 
 ### Client
